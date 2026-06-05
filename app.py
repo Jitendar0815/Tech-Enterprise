@@ -1,6 +1,6 @@
 import streamlit as st
 import plotly.express as px
-from utils.styling import load_css
+from utils.styling import load_css, navbar
 from utils.data_loader import get_daily_summary
 
 st.set_page_config(
@@ -11,10 +11,11 @@ st.set_page_config(
 )
 
 load_css("assets/style.css")
+navbar()
 
-# ---- ANIMATED HERO SECTION ----
+# ---- ANIMATED HERO ----
 st.markdown("""
-<div class="fade-in" style="text-align: center; margin-top: -2rem;">
+<div class="fade-in" style="text-align: center; margin-top: -1rem;">
     <h1>🎬 Media, Entertainment & Attention Analytics</h1>
     <p style="font-size: 1.3rem; color: #b0b0ff; margin-top: -0.5rem; letter-spacing: 1px;">
         Decode what captures the world's attention.
@@ -23,7 +24,7 @@ st.markdown("""
 <hr>
 """, unsafe_allow_html=True)
 
-# ---- KPI CARDS (Animated numbers) ----
+# ---- KPI CARDS ----
 df_summary = get_daily_summary()
 
 kpi1, kpi2, kpi3, kpi4 = st.columns(4)
@@ -86,56 +87,6 @@ fig.update_layout(
     yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.1)')
 )
 st.plotly_chart(fig, use_container_width=True)
-
-# ---- NAVIGATION CARDS ----
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("""
-<div class="fade-in" style="text-align: center; animation-delay: 0.6s">
-    <h2 style="border: none; padding-left: 0;">📌 Explore the Dashboard</h2>
-</div>
-""", unsafe_allow_html=True)
-
-col1, col2, col3, col4 = st.columns(4, gap="large")
-
-with col1:
-    st.markdown("""
-    <div class="nav-card fade-in" style="animation-delay: 0.7s">
-        <h3>📊 Attention</h3>
-        <p>Heatmaps & trends of audience attention</p>
-    </div>
-    """, unsafe_allow_html=True)
-    if st.button("→ Open", key="nav1"):
-        st.switch_page("pages/1_📊_Attention_Analytics.py")
-
-with col2:
-    st.markdown("""
-    <div class="nav-card fade-in" style="animation-delay: 0.8s">
-        <h3>🎬 Performance</h3>
-        <p>Genres, ratings, and box office</p>
-    </div>
-    """, unsafe_allow_html=True)
-    if st.button("→ Open", key="nav2"):
-        st.switch_page("pages/2_🎬_Content_Performance.py")
-
-with col3:
-    st.markdown("""
-    <div class="nav-card fade-in" style="animation-delay: 0.9s">
-        <h3>💬 Social Buzz</h3>
-        <p>Sentiment & trending topics</p>
-    </div>
-    """, unsafe_allow_html=True)
-    if st.button("→ Open", key="nav3"):
-        st.switch_page("pages/3_💬_Social_Media_Buzz.py")
-
-with col4:
-    st.markdown("""
-    <div class="nav-card fade-in" style="animation-delay: 1.0s">
-        <h3>👥 Audience</h3>
-        <p>Who's watching & from where</p>
-    </div>
-    """, unsafe_allow_html=True)
-    if st.button("→ Open", key="nav4"):
-        st.switch_page("pages/4_👥_Audience_Insights.py")
 
 # Footer
 st.markdown("<hr>", unsafe_allow_html=True)
