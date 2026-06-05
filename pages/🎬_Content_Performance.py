@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.express as px
+import pandas as pd
 from utils.styling import load_css, navbar
 from utils.data_loader import get_content_data
 
@@ -35,13 +36,13 @@ fig_scatter.update_layout(margin=dict(l=0, r=0, t=30, b=0),
                           paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 st.plotly_chart(fig_scatter, use_container_width=True)
 
-# ---- TOP MOVIES TABLE ----
+# ---- TOP MOVIES TABLE (clean, no gradient) ----
 st.markdown('<div class="fade-in"><h2>📋 Top 10 Movies by Box Office</h2></div>', unsafe_allow_html=True)
-top10 = df.nlargest(10, 'box_office_millions')[['title','genre','rating','box_office_millions','views_millions']]
-st.dataframe(
-    top10.style.background_gradient(subset=['box_office_millions'], cmap='OrRd')
-    .format({'box_office_millions': '${:.1f}M', 'views_millions': '{:.1f}M'}),
-    use_container_width=True
-)
+top10 = df.nlargest(10, 'box_office_millions').copy()
+# Format columns for display
+top10['box_office_millions'] = top10['box_office_millions'].apply(lambda x: f"${x:.1f}M")
+top10['views_millions'] = top10['views_millions'].apply(lambda x: f"{x:.1f}M")
+st.dataframe(top10[['title','genre','rating','box_office_millions','views_millions']],
+             use_container_width=True, hide_index=True)
 
 st.caption("Data simulated · Genres: Action, Comedy, Drama, Sci-Fi, Horror")
