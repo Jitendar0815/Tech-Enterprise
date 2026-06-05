@@ -26,7 +26,6 @@ st.markdown("""
 
 # ---- KPI CARDS ----
 df_summary = get_daily_summary()
-
 kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
 with kpi1:
