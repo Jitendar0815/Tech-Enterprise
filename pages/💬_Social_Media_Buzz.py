@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
-from utils.data_loader import get_social_data
 from utils.styling import load_css, navbar
+from utils.data_loader import get_social_data
 
 st.set_page_config(page_title="Social Media Buzz", page_icon="💬", layout="wide")
 load_css("assets/style.css")
