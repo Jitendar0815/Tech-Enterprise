@@ -87,6 +87,5 @@ fig.update_layout(
 )
 st.plotly_chart(fig, use_container_width=True)
 
-# Footer
 st.markdown("<hr>", unsafe_allow_html=True)
 st.caption("© 2026 Media Attention Analytics · Built with Streamlit & Passion")
