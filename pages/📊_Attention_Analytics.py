@@ -1,13 +1,14 @@
 import streamlit as st
 import plotly.express as px
 from utils.data_loader import get_attention_data
-from utils.styling import load_css
+from utils.styling import load_css, navbar
 
 st.set_page_config(page_title="Attention Analytics", page_icon="📊", layout="wide")
 load_css("assets/style.css")
+navbar()
 
 st.markdown('<div class="fade-in"><h1>📊 Attention Analytics</h1></div>', unsafe_allow_html=True)
-st.markdown("Deep dive into how user attention fluctuates across hours and days.", unsafe_allow_html=True)
+st.markdown("Deep dive into how user attention fluctuates across hours and days.")
 
 df = get_attention_data()
 
