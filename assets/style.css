@@ -132,43 +132,14 @@ h3 {
     color: #aaaacc;
 }
 
-/* ========== NAVBAR BUTTONS ========== */
-.navbar .stButton > button {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 30px;
-    color: #e0e0e0;
-    font-weight: 500;
-    padding: 0.5rem 1.2rem;
-    backdrop-filter: blur(8px);
-    transition: all 0.3s ease;
-    box-shadow: none;
-    text-transform: none;
-    letter-spacing: 0.3px;
-    width: 100%;
-}
-
-.navbar .stButton > button:hover {
-    background: rgba(255, 75, 110, 0.15);
-    border-color: rgba(255, 75, 110, 0.4);
-    box-shadow: 0 0 12px rgba(255, 75, 110, 0.3);
-    color: #fff;
-}
-
 /* ========== FADE IN ANIMATION ========== */
 .fade-in {
     animation: fadeInUp 0.8s ease both;
 }
 
 @keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 /* ========== GLOWING SEPARATOR ========== */
@@ -182,31 +153,4 @@ hr {
 /* ========== PLOTLY CHARTS BACKGROUND ========== */
 .js-plotly-plot .plotly .main-svg {
     background: transparent !important;
-}
-
-/* ========== TABLE STYLES ========== */
-[data-testid="stTable"] {
-    background: rgba(255,255,255,0.02);
-    border-radius: 16px;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-}
-
-[data-testid="stTable"] table {
-    border-collapse: collapse;
-}
-
-[data-testid="stTable"] th {
-    background: rgba(255,75,110,0.1);
-    color: #ff9a3c !important;
-    font-weight: 600;
-}
-
-[data-testid="stTable"] tr:nth-child(even) {
-    background: rgba(255,255,255,0.03);
-}
-
-[data-testid="stTable"] tr:hover {
-    background: rgba(255,75,110,0.1);
-    transition: 0.3s;
 }
