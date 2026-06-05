@@ -5,30 +5,20 @@ def load_css(file_name: str):
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 def navbar():
-    """Render a persistent top navigation bar with links to all pages."""
-    # Inject minimal additional CSS for the navbar container
-    st.markdown("""
-    <style>
-    .nav-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.8rem;
-        margin-bottom: 2rem;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # Use st.page_link for native Streamlit navigation (since version 1.31.0)
-    cols = st.columns([1, 1, 1, 1, 1])
-    pages = [
-        ("🏠 Home", "app.py"),
-        ("📊 Attention", "pages/1_📊_Attention_Analytics.py"),
-        ("🎬 Content", "pages/2_🎬_Content_Performance.py"),
-        ("💬 Social", "pages/3_💬_Social_Media_Buzz.py"),
-        ("👥 Audience", "pages/4_👥_Audience_Insights.py"),
-    ]
-
-    for idx, (label, path) in enumerate(pages):
-        with cols[idx]:
-            st.page_link(path, label=label, use_container_width=True)
+    """Top navigation bar that works on every page (buttons + switch_page)."""
+    # Custom container to apply CSS class
+    with st.container():
+        st.markdown('<div class="navbar">', unsafe_allow_html=True)
+        cols = st.columns([1, 1, 1, 1, 1])
+        pages = [
+            ("🏠 Home", "app.py"),
+            ("📊 Attention", "pages/1_📊_Attention_Analytics.py"),
+            ("🎬 Content", "pages/2_🎬_Content_Performance.py"),
+            ("💬 Social", "pages/3_💬_Social_Media_Buzz.py"),
+            ("👥 Audience", "pages/4_👥_Audience_Insights.py"),
+        ]
+        for idx, (label, path) in enumerate(pages):
+            with cols[idx]:
+                if st.button(label, key=f"nav_{path}", use_container_width=True):
+                    st.switch_page(path)
+        st.markdown('</div>', unsafe_allow_html=True)
