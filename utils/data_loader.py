@@ -27,7 +27,7 @@ def get_attention_data():
     days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
     records = []
     for d in dates:
-        dow = d.dayofweek  # 0=Monday
+        dow = d.dayofweek
         for h in hours:
             base = 0.5 + 0.3*np.sin((h-14)*np.pi/12) + 0.2*(1 if dow>=5 else 0)
             score = base + np.random.normal(0, 0.1)
