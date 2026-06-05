@@ -132,26 +132,26 @@ h3 {
     color: #aaaacc;
 }
 
-/* ========== NAVBAR (built by styling.py) ========== */
-/* The navbar function injects inline styles; these are additional global tweaks */
-.navbar a {
-    text-decoration: none !important;
+/* ========== NAVBAR BUTTONS ========== */
+.navbar .stButton > button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
     color: #e0e0e0;
     font-weight: 500;
-    padding: 0.6rem 1.4rem;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.08);
+    padding: 0.5rem 1.2rem;
+    backdrop-filter: blur(8px);
     transition: all 0.3s ease;
-    font-size: 0.9rem;
+    box-shadow: none;
+    text-transform: none;
     letter-spacing: 0.3px;
+    width: 100%;
 }
 
-.navbar a:hover {
-    background: rgba(255,75,110,0.15);
-    border-color: rgba(255,75,110,0.4);
-    box-shadow: 0 0 15px rgba(255,75,110,0.3);
+.navbar .stButton > button:hover {
+    background: rgba(255, 75, 110, 0.15);
+    border-color: rgba(255, 75, 110, 0.4);
+    box-shadow: 0 0 12px rgba(255, 75, 110, 0.3);
     color: #fff;
 }
 
@@ -177,29 +177,6 @@ hr {
     height: 2px;
     background: linear-gradient(90deg, transparent, #ff4b6e, transparent);
     margin: 2rem 0;
-}
-
-/* ========== BUTTON STYLES ========== */
-div.stButton > button {
-    background: linear-gradient(135deg, #ff4b6e, #ff9a3c);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 0.6rem 2rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 75, 110, 0.3);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-div.stButton > button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 75, 110, 0.5);
-}
-
-div.stButton > button:active {
-    transform: translateY(0px);
 }
 
 /* ========== PLOTLY CHARTS BACKGROUND ========== */
