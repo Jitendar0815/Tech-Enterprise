@@ -1,10 +1,11 @@
 import streamlit as st
 import plotly.express as px
 from utils.data_loader import get_audience_data
-from utils.styling import load_css
+from utils.styling import load_css, navbar
 
 st.set_page_config(page_title="Audience Insights", page_icon="👥", layout="wide")
 load_css("assets/style.css")
+navbar()
 
 st.markdown('<div class="fade-in"><h1>👥 Audience Insights</h1></div>', unsafe_allow_html=True)
 st.markdown("Who is watching, on what device, and from where.")
