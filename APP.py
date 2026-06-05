@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-from utils.styling import load_css   # navbar removed
+from utils.styling import load_css
 from utils.data_loader import (
     get_daily_summary,
     get_attention_data,
@@ -14,7 +14,7 @@ st.set_page_config(
     page_title="Media Attention Analytics",
     page_icon="🎬",
     layout="wide",
-    initial_sidebar_state="collapsed"  # hide sidebar completely
+    initial_sidebar_state="collapsed"
 )
 
 load_css("assets/style.css")
@@ -25,9 +25,7 @@ load_css("assets/style.css")
 st.markdown("""
 <div class="fade-in" style="text-align: center; margin-top: -1rem;">
     <h1>🎬 Media, Entertainment & Attention Analytics</h1>
-    <p style="font-size: 1.3rem; color: #b0b0ff; margin-top: -0.5rem; letter-spacing: 1px;">
-        Decode what captures the world's attention.
-    </p>
+    <p class="hero-subtitle">Decode what captures the world's attention.</p>
 </div>
 <hr>
 """, unsafe_allow_html=True)
