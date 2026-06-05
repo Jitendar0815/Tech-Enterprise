@@ -4,7 +4,7 @@
 /* ========== GLOBAL RESET & THEME ========== */
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
-    background: #0a0a14;  /* fallback */
+    background: #0a0a14;
     color: #e0e0e0;
 }
 
@@ -132,35 +132,27 @@ h3 {
     color: #aaaacc;
 }
 
-/* ========== NAVIGATION CARDS ========== */
-.nav-card {
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+/* ========== NAVBAR (built by styling.py) ========== */
+/* The navbar function injects inline styles; these are additional global tweaks */
+.navbar a {
+    text-decoration: none !important;
+    color: #e0e0e0;
+    font-weight: 500;
+    padding: 0.6rem 1.4rem;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
 }
 
-.nav-card:hover {
-    transform: scale(1.05);
-    border-color: rgba(0, 255, 255, 0.4);
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
-}
-
-.nav-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    color: #ffffff !important;
-}
-
-.nav-card p {
-    color: #aaaacc;
-    font-size: 0.95rem;
+.navbar a:hover {
+    background: rgba(255,75,110,0.15);
+    border-color: rgba(255,75,110,0.4);
+    box-shadow: 0 0 15px rgba(255,75,110,0.3);
+    color: #fff;
 }
 
 /* ========== FADE IN ANIMATION ========== */
