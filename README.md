@@ -14,6 +14,7 @@ A **stunning, award‑winning** Streamlit dashboard that reveals the pulse of au
 - **Social Media Buzz** – sentiment trends & trending hashtags.
 - **Audience Insights** – age donuts, device bars, global heatmap.
 - **Fully responsive** metric cards with hover effects.
+- **Persistent top navigation bar** – jump between all sections with one click.
 - **No external API calls** — all data simulated, works offline.
 
 ## 🚀 Quick Start
