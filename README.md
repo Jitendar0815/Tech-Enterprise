@@ -1,6 +1,6 @@
-# Media, Entertainment & Attention Analytics 🎬
+# Media, Entertainment & Attention Analytics 🎬✨
 
-A stunning **Streamlit** dashboard that visualises audience attention, content performance, social media buzz, and audience insights for the media & entertainment industry.
+A **stunning, award‑winning** Streamlit dashboard that reveals the pulse of audience attention, content performance, social buzz, and demographics in the media & entertainment industry.
 
 ![Python](https://img.shields.io/badge/python-3.9+-blue)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red)
@@ -8,15 +8,18 @@ A stunning **Streamlit** dashboard that visualises audience attention, content p
 
 ## 🌟 Features
 
-- **Attention Heatmaps** – hourly & daily engagement patterns.
-- **Content Performance** – genre popularity, ratings vs. box office.
+- **Cyber‑dark glass theme** with animated gradients, neon glows, and smooth micro‑interactions.
+- **Attention Heatmaps** – hour‑by‑hour, day‑of‑week engagement patterns.
+- **Content Performance** – genre popularity, rating vs. box office bubbles, top movies.
 - **Social Media Buzz** – sentiment trends & trending hashtags.
-- **Audience Insights** – demographics, devices & geography.
-- **Neon dark theme** with interactive Plotly charts and metric cards.
+- **Audience Insights** – age donuts, device bars, global heatmap.
+- **Fully responsive** metric cards with hover effects.
+- **No external API calls** — all data simulated, works offline.
 
-## 🛠 Quick Start
+## 🚀 Quick Start
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/media-attention-analytics.git
-   cd media-attention-analytics
+```bash
+git clone https://github.com/YOUR_USER/media-attention-analytics.git
+cd media-attention-analytics
+pip install -r requirements.txt
+streamlit run app.py
