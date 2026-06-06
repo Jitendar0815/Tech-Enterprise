@@ -1,261 +1,98 @@
 import streamlit as st
-import plotly.express as px
 import pandas as pd
-from utils.styling import load_css
-from utils.data_loader import (
-    get_daily_summary,
-    get_attention_data,
-    get_content_data,
-    get_social_data,
-    get_audience_data,
-)
+import numpy as np
+from datetime import datetime, timedelta
 
-st.set_page_config(
-    page_title="Media Attention Analytics",
-    page_icon="🎬",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+# Page config
+st.set_page_config(page_title="AttentiX – Attention Analytics", page_icon="🎬", layout="wide")
 
-load_css("assets/style.css")
+# Custom CSS & JS
+from src.components import inject_css, inject_js, hero_section, glass_metric_card, navigation_bar, footer
+inject_css()
+inject_js()
 
-# =============================================================================
-# HERO SECTION
-# =============================================================================
+# Load data engine & visualizations
+from src.data_generator import generate_attention
+from src.analytics_engine import compute_trend
+from src.visualizations import retention_curve, attention_heatmap, interaction_spikes, trend_forecast
+
+# ---------- SIDEBAR ----------
+with st.sidebar:
+    st.image("https://img.icons8.com/fluency/96/000000/eye-tracking.png", width=80)
+    st.markdown("## ⚙️ Controls")
+    media = st.selectbox("Content Type", ['video', 'music', 'article'])
+    seed = st.number_input("Random Seed", 1, 999, 42)
+    st.markdown("---")
+    st.caption("This demo uses **synthetic data**. Connect real APIs in production.")
+
+# ---------- MAIN CONTENT ----------
+navigation_bar()
+
+# Hero
+hero_section()
+
+# Dashboard Section
+st.markdown('<div id="dashboard"></div>', unsafe_allow_html=True)
+st.markdown("<div class='section-divider'><span style='color:#A0A4B8; font-size:1.5rem;'>📊 Dashboard</span></div>", unsafe_allow_html=True)
+
+df, meta = generate_attention(media, seed)
+
+# Metric row
+cols = st.columns(4)
+metrics = [
+    ("Avg Retention", meta['avg_retention'], "%", f"+{round(np.random.uniform(0,5),1)}"),
+    ("Completion Rate", meta['completion_rate'], "%", f"+{round(np.random.uniform(0,3),1)}"),
+    ("Attention Score", meta['attention_score'], "/100", f"+{round(np.random.uniform(0,8),1)}"),
+    ("Drop‑off Points", len(meta['dropoff_points']), "", f"-{len(meta['dropoff_points'])}" if len(meta['dropoff_points']) > 0 else None)
+]
+for idx, (label, val, suf, delta) in enumerate(metrics):
+    with cols[idx]:
+        card_key = f"metric_{idx}_{seed}"
+        st.markdown(glass_metric_card(label, val, suf, delta, card_key), unsafe_allow_html=True)
+
+if meta['dropoff_points']:
+    st.warning(f"⚠️ Significant drop‑offs at seconds: {', '.join(map(str, meta['dropoff_points']))}")
+
+# Charts
+col1, col2 = st.columns(2)
+with col1:
+    st.plotly_chart(retention_curve(df, meta), use_container_width=True)
+with col2:
+    st.plotly_chart(attention_heatmap(df, meta), use_container_width=True)
+
+st.plotly_chart(interaction_spikes(df), use_container_width=True)
+
+# Forecast Section
+st.markdown('<div id="forecast"></div>', unsafe_allow_html=True)
+st.markdown("<div class='section-divider'><span style='color:#A0A4B8; font-size:1.5rem;'>🔮 3‑Day Attention Forecast</span></div>", unsafe_allow_html=True)
+
+# Generate some historical data (last 10 days)
+np.random.seed(seed)
+historical_dates = pd.date_range(end=datetime.today(), periods=10, freq='D').strftime('%Y-%m-%d').tolist()
+historical_scores = np.clip(np.random.normal(meta['attention_score'], 3, 10), 0, 100).tolist()
+forecast = compute_trend({'dates': historical_dates, 'scores': historical_scores})
+
+st.plotly_chart(trend_forecast(
+    {'dates': historical_dates, 'scores': historical_scores},
+    forecast
+), use_container_width=True)
+
+# Raw Data Section
+st.markdown('<div id="raw-data"></div>', unsafe_allow_html=True)
+st.markdown("<div class='section-divider'><span style='color:#A0A4B8; font-size:1.5rem;'>📁 Raw Attention Data</span></div>", unsafe_allow_html=True)
+with st.expander("Click to expand data table"):
+    st.dataframe(df.style.background_gradient(subset=['retention_pct'], cmap='RdYlGn'))
+
+# About Section
+st.markdown('<div id="about"></div>', unsafe_allow_html=True)
+st.markdown("<div class='section-divider'><span style='color:#A0A4B8; font-size:1.5rem;'>ℹ️ About AttentiX</span></div>", unsafe_allow_html=True)
 st.markdown("""
-<div class="fade-in" style="text-align: center; margin-top: -1rem;">
-    <h1>🎬 Media, Entertainment & Attention Analytics</h1>
-    <p class="hero-subtitle">Decode what captures the world's attention.</p>
-</div>
-<hr>
-""", unsafe_allow_html=True)
-
-# =============================================================================
-# KPI METRICS
-# =============================================================================
-df_summary = get_daily_summary()
-kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-
-with kpi1:
-    st.markdown(f"""
-    <div class="metric-card fade-in" style="animation-delay: 0.1s">
-        <div class="value">{df_summary['total_users'].iloc[-1]:,}</div>
-        <div class="label">👥 Total Active Users</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with kpi2:
-    st.markdown(f"""
-    <div class="metric-card fade-in" style="animation-delay: 0.2s">
-        <div class="value">{df_summary['avg_attention_min'].iloc[-1]:.1f} min</div>
-        <div class="label">⏱️ Avg Attention Span</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with kpi3:
-    st.markdown(f"""
-    <div class="metric-card fade-in" style="animation-delay: 0.3s">
-        <div class="value">{df_summary['content_pieces'].iloc[-1]}</div>
-        <div class="label">🎞️ Content Pieces</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with kpi4:
-    st.markdown(f"""
-    <div class="metric-card fade-in" style="animation-delay: 0.4s">
-        <div class="value">{df_summary['engagement_rate'].iloc[-1]:.1f}%</div>
-        <div class="label">📈 Engagement Rate</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-# =============================================================================
-# MAIN TREND CHART
-# =============================================================================
-st.markdown("""
-<div class="fade-in" style="animation-delay: 0.5s">
-    <h2>📅 Daily Active Users Trend</h2>
+<div class="glass-card">
+    <p>AttentiX is a prototype <strong>media attention analytics platform</strong> that helps creators and studios understand 
+    exactly when and why audiences stay engaged – or leave.</p>
+    <p>Built with <strong>Streamlit, Plotly, and synthetic data</strong>. Ready to be plugged into real APIs.</p>
 </div>
 """, unsafe_allow_html=True)
-
-fig = px.area(
-    df_summary, x='date', y='total_users',
-    labels={'date': '', 'total_users': 'Users'},
-    template="plotly_dark",
-    color_discrete_sequence=['#ff4b6e']
-)
-fig.update_traces(line=dict(width=3, shape='spline'), opacity=0.7,
-                  fill='tozeroy', fillcolor='rgba(255,75,110,0.15)')
-fig.update_layout(
-    height=420,
-    margin=dict(l=0, r=0, t=30, b=0),
-    hovermode='x unified',
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    font=dict(color='white'),
-    xaxis=dict(showgrid=False),
-    yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.1)')
-)
-st.plotly_chart(fig, use_container_width=True)
-
-# =============================================================================
-# SECTION 1: ATTENTION ANALYTICS
-# =============================================================================
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown('<div class="fade-in"><h2>📊 Attention Analytics</h2></div>', unsafe_allow_html=True)
-st.markdown("Deep dive into how user attention fluctuates across hours and days.")
-
-df_att = get_attention_data()
-
-# Heatmap
-heatmap_data = df_att.pivot_table(values='attention_score', index='day_name', columns='hour', aggfunc='mean')
-day_order = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
-heatmap_data = heatmap_data.reindex(day_order)
-
-fig_heat = px.imshow(
-    heatmap_data,
-    labels=dict(x="Hour of Day", y="Day of Week", color="Avg Attention"),
-    x=[f"{h}:00" for h in range(24)],
-    y=day_order,
-    color_continuous_scale='OrRd',
-    template='plotly_dark',
-    aspect='auto'
-)
-fig_heat.update_layout(margin=dict(l=0, r=0, t=30, b=0),
-                       paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
-st.plotly_chart(fig_heat, use_container_width=True)
-
-# Attention trend line
-daily_trend = df_att.groupby('date')['attention_score'].mean().reset_index()
-fig_line_att = px.line(daily_trend, x='date', y='attention_score',
-                       labels={'attention_score': 'Avg Attention Score'},
-                       template='plotly_dark', color_discrete_sequence=['#ffd700'])
-fig_line_att.update_traces(line_width=3)
-fig_line_att.update_layout(hovermode='x unified', margin=dict(l=0, r=0, t=30, b=0),
-                           paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
-st.plotly_chart(fig_line_att, use_container_width=True)
-
-# Histogram of attention spans
-fig_hist = px.histogram(df_att, x='attention_span_min', nbins=35,
-                        labels={'attention_span_min': 'Attention Span (min)'},
-                        color_discrete_sequence=['#00b4d8'], template='plotly_dark')
-fig_hist.update_layout(margin=dict(l=0, r=0, t=30, b=0),
-                       paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
-st.plotly_chart(fig_hist, use_container_width=True)
-
-# =============================================================================
-# SECTION 2: CONTENT PERFORMANCE
-# =============================================================================
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown('<div class="fade-in"><h2>🎬 Content Performance</h2></div>', unsafe_allow_html=True)
-st.markdown("Analyse movies & shows by genre, ratings, and box office.")
-
-df_content = get_content_data()
-
-# Top genres bar
-genre_views = df_content.groupby('genre')['views_millions'].sum().reset_index().sort_values('views_millions', ascending=False)
-fig_bar_genre = px.bar(genre_views, x='views_millions', y='genre', orientation='h',
-                       labels={'views_millions': 'Total Views (Millions)'},
-                       color='views_millions', color_continuous_scale='bluered',
-                       template='plotly_dark')
-fig_bar_genre.update_layout(yaxis={'categoryorder': 'total ascending'},
-                            margin=dict(l=0, r=0, t=30, b=0),
-                            paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                            coloraxis_showscale=False)
-st.plotly_chart(fig_bar_genre, use_container_width=True)
-
-# Scatter: rating vs box office
-fig_scatter = px.scatter(df_content, x='rating', y='box_office_millions', size='views_millions',
-                         color='genre', hover_name='title', template='plotly_dark',
-                         labels={'rating': 'IMDb Rating', 'box_office_millions': 'Box Office ($M)'})
-fig_scatter.update_traces(marker=dict(line=dict(width=1, color='white')))
-fig_scatter.update_layout(margin=dict(l=0, r=0, t=30, b=0),
-                          paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
-st.plotly_chart(fig_scatter, use_container_width=True)
-
-# Top 10 movies table
-top10 = df_content.nlargest(10, 'box_office_millions').copy()
-top10['box_office_millions'] = top10['box_office_millions'].apply(lambda x: f"${x:.1f}M")
-top10['views_millions'] = top10['views_millions'].apply(lambda x: f"{x:.1f}M")
-st.markdown("#### 📋 Top 10 Movies by Box Office")
-st.dataframe(top10[['title','genre','rating','box_office_millions','views_millions']],
-             use_container_width=True, hide_index=True)
-
-# =============================================================================
-# SECTION 3: SOCIAL MEDIA BUZZ
-# =============================================================================
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown('<div class="fade-in"><h2>💬 Social Media Buzz</h2></div>', unsafe_allow_html=True)
-st.markdown("Track sentiment and trending topics around media content.")
-
-df_sentiment, df_hashtags = get_social_data()
-
-# Sentiment line
-fig_line_sent = px.line(df_sentiment, x='date', y='sentiment_score',
-                        labels={'sentiment_score': 'Sentiment (-1 to +1)'},
-                        template='plotly_dark', color_discrete_sequence=['#2ecc71'])
-fig_line_sent.add_hline(y=0, line_dash='dot', line_color='gray')
-fig_line_sent.update_traces(line_width=3, mode='lines+markers', marker=dict(size=5))
-fig_line_sent.update_layout(hovermode='x unified', margin=dict(l=0, r=0, t=30, b=0),
-                            paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
-st.plotly_chart(fig_line_sent, use_container_width=True)
-
-# Hashtags bar
-fig_bar_hash = px.bar(df_hashtags, x='count', y='hashtag', orientation='h',
-                      labels={'count': 'Mentions'},
-                      color='count', color_continuous_scale='OrRd',
-                      template='plotly_dark')
-fig_bar_hash.update_layout(yaxis={'categoryorder': 'total ascending'},
-                           margin=dict(l=0, r=0, t=30, b=0),
-                           paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                           coloraxis_showscale=False)
-st.plotly_chart(fig_bar_hash, use_container_width=True)
-
-# Metrics
-col_s1, col_s2, col_s3 = st.columns(3)
-with col_s1:
-    st.metric("Avg Sentiment", f"{df_sentiment['sentiment_score'].mean():.2f}", delta="+0.05")
-with col_s2:
-    st.metric("Total Mentions", "124.5K", delta="+8.2K")
-with col_s3:
-    st.metric("Top Hashtag", df_hashtags.iloc[0]['hashtag'])
-
-# =============================================================================
-# SECTION 4: AUDIENCE INSIGHTS
-# =============================================================================
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown('<div class="fade-in"><h2>👥 Audience Insights</h2></div>', unsafe_allow_html=True)
-st.markdown("Who is watching, on what device, and from where.")
-
-age_df, device_df, geo_df = get_audience_data()
-
-# Age donut
-fig_pie_age = px.pie(age_df, values='percentage', names='age_group',
-                     hole=0.6, color_discrete_sequence=px.colors.sequential.RdBu,
-                     template='plotly_dark')
-fig_pie_age.update_traces(textinfo='percent+label', textfont_color='white')
-fig_pie_age.update_layout(margin=dict(l=0, r=0, t=30, b=0),
-                          paper_bgcolor='rgba(0,0,0,0)')
-st.plotly_chart(fig_pie_age, use_container_width=True)
-
-# Device bar
-fig_bar_dev = px.bar(device_df, x='device', y='users_percent',
-                     labels={'users_percent': '% of Users'},
-                     color='device', color_discrete_sequence=['#ff4b6e','#00b4d8','#ffd700','#2ecc71'],
-                     template='plotly_dark')
-fig_bar_dev.update_layout(showlegend=False, margin=dict(l=0, r=0, t=30, b=0),
-                          paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
-st.plotly_chart(fig_bar_dev, use_container_width=True)
-
-# Top countries
-fig_geo = px.bar(geo_df.head(12), x='country', y='viewers_millions',
-                 labels={'viewers_millions': 'Viewers (Millions)'},
-                 color='viewers_millions', color_continuous_scale='tealrose',
-                 template='plotly_dark')
-fig_geo.update_layout(margin=dict(l=0, r=0, t=30, b=0),
-                      paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                      coloraxis_showscale=False)
-st.plotly_chart(fig_geo, use_container_width=True)
 
 # Footer
-st.markdown("<hr>", unsafe_allow_html=True)
-st.caption("© 2026 Media Attention Analytics · Built with Streamlit & Passion")
+footer()
