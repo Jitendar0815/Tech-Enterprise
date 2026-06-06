@@ -1,0 +1,125 @@
+/* ---- CUSTOM FONTS ---- */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+* {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ---- HERO SECTION ---- */
+.hero-container {
+    background: linear-gradient(135deg, #1A1C24 0%, #0E1117 100%);
+    padding: 2rem 1rem 3rem 1rem;
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-container::before {
+    content: "";
+    position: absolute;
+    top: -30%;
+    left: -30%;
+    width: 160%;
+    height: 160%;
+    background: radial-gradient(circle at 30% 20%, rgba(108, 99, 255, 0.15), transparent 70%);
+    animation: floatGradient 6s ease-in-out infinite;
+}
+
+@keyframes floatGradient {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(2%, 2%); }
+}
+
+/* ---- GLASSMORPHIC CARDS ---- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(108, 99, 255, 0.5);
+    box-shadow: 0 8px 40px rgba(108, 99, 255, 0.15);
+}
+
+/* ---- ANIMATED METRIC CARD ---- */
+.metric-value {
+    font-size: 2.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #6C63FF, #48C9B0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+
+/* ---- TYPEWRITER EFFECT ---- */
+.typewriter {
+    font-size: 1.2rem;
+    color: #A0A4B8;
+    border-right: 2px solid #6C63FF;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink {
+    from, to { border-color: transparent; }
+    50% { border-color: #6C63FF; }
+}
+
+/* ---- SECTIONS DIVIDER ---- */
+.section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 3rem 0 2rem 0;
+}
+
+.section-divider::before,
+.section-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(108, 99, 255, 0.5), transparent);
+}
+
+/* ---- NAVIGATION BAR ---- */
+.top-nav {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem;
+    background: rgba(14, 17, 23, 0.8);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    position: sticky;
+    top: 10px;
+    z-index: 100;
+}
+
+.nav-link {
+    color: #A0A4B8;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+}
+
+.nav-link:hover {
+    color: #6C63FF;
+}
+
+/* ---- FOOTER ---- */
+.footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 4rem;
+    color: #5A5E6E;
+}
